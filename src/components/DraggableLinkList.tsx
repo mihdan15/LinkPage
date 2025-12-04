@@ -1,8 +1,8 @@
 // DraggableLinkList Component
 // Requirements: 1.4, 1.7, 1.8
 
-import { useState } from 'react';
-import { motion, Reorder, useDragControls } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import { motion, Reorder, useDragControls, AnimatePresence } from 'framer-motion';
 import {
   GripVertical,
   Edit2,
@@ -25,6 +25,7 @@ import {
   Camera,
   MessageCircle,
   Link as LinkIcon,
+  MoreVertical,
 } from 'lucide-react';
 import type { LinkItem } from '../types';
 
@@ -84,6 +85,19 @@ function DraggableLinkItem({
 }: DraggableLinkItemProps) {
   const dragControls = useDragControls();
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setShowMobileMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const IconComponent =
     link.iconType === 'predefined'
@@ -115,7 +129,7 @@ function DraggableLinkItem({
         {/* Drag Handle */}
         <button
           onPointerDown={(e) => dragControls.start(e)}
-          className="p-1 cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+          className="p-1 cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
           aria-label="Drag to reorder"
         >
           <GripVertical className="w-5 h-5" />
@@ -184,14 +198,14 @@ function DraggableLinkItem({
           </span>
         )}
 
-        {/* Action Buttons - Touch-friendly with min 44px touch targets */}
-        <div className="flex items-center gap-1">
+        {/* Action Buttons - Desktop (hidden on mobile) */}
+        <div className="hidden sm:flex items-center gap-1">
           {/* Toggle Visibility */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onToggle(link.id, !link.isEnabled)}
-            className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors ${
+            className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
               link.isEnabled
                 ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 active:bg-green-100 dark:active:bg-green-900/30'
                 : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600'
@@ -211,7 +225,7 @@ function DraggableLinkItem({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onEdit(link)}
-            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 active:bg-blue-100 dark:active:bg-blue-900/30 transition-colors"
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 active:bg-blue-100 dark:active:bg-blue-900/30 transition-colors cursor-pointer"
             title="Edit link"
             aria-label="Edit link"
           >
@@ -223,7 +237,7 @@ function DraggableLinkItem({
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleDelete}
-            className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors ${
+            className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
               isDeleting
                 ? 'bg-red-500 text-white'
                 : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 active:bg-red-100 dark:active:bg-red-900/30'
@@ -233,6 +247,84 @@ function DraggableLinkItem({
           >
             <Trash2 className="w-5 h-5" />
           </motion.button>
+        </div>
+
+        {/* Mobile Menu - 3 dots (visible only on mobile) */}
+        <div className="relative sm:hidden" ref={menuRef}>
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowMobileMenu(!showMobileMenu)}
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
+            aria-label="More actions"
+          >
+            <MoreVertical className="w-5 h-5" />
+          </motion.button>
+
+          {/* Dropdown Menu */}
+          <AnimatePresence>
+            {showMobileMenu && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: -10 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -10 }}
+                transition={{ duration: 0.15 }}
+                className="absolute right-0 top-full mt-1 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
+              >
+                {/* Toggle Visibility */}
+                <button
+                  onClick={() => {
+                    onToggle(link.id, !link.isEnabled);
+                    setShowMobileMenu(false);
+                  }}
+                  className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors cursor-pointer ${
+                    link.isEnabled
+                      ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                      : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  {link.isEnabled ? (
+                    <>
+                      <EyeOff className="w-4 h-4" />
+                      <span>Sembunyikan</span>
+                    </>
+                  ) : (
+                    <>
+                      <Eye className="w-4 h-4" />
+                      <span>Tampilkan</span>
+                    </>
+                  )}
+                </button>
+
+                {/* Edit */}
+                <button
+                  onClick={() => {
+                    onEdit(link);
+                    setShowMobileMenu(false);
+                  }}
+                  className="w-full px-4 py-3 flex items-center gap-3 text-left text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
+                >
+                  <Edit2 className="w-4 h-4" />
+                  <span>Edit</span>
+                </button>
+
+                {/* Delete */}
+                <button
+                  onClick={() => {
+                    handleDelete();
+                    if (!isDeleting) setShowMobileMenu(false);
+                  }}
+                  className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors cursor-pointer ${
+                    isDeleting
+                      ? 'bg-red-500 text-white'
+                      : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                  }`}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span>{isDeleting ? 'Klik lagi untuk hapus' : 'Hapus'}</span>
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </div>
 
