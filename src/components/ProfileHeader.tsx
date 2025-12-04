@@ -125,10 +125,11 @@ export function ProfileHeader({ profile, theme }: ProfileHeaderProps) {
         </div>
       </motion.div>
 
-      {/* Display Name with custom style */}
+      {/* Display Name with custom style - responsive with max size on mobile */}
       <motion.h1
+        className="mb-2 max-sm:text-xl sm:text-2xl"
         style={{
-          fontSize: `${nameStyle.fontSize}px`,
+          fontSize: `min(${nameStyle.fontSize}px, calc(16px + 2vw))`,
           color: nameStyle.color,
           fontFamily: nameStyle.fontFamily,
           fontWeight: getFontWeight(nameStyle.fontWeight || 'bold'),
@@ -141,12 +142,12 @@ export function ProfileHeader({ profile, theme }: ProfileHeaderProps) {
         {profile.displayName}
       </motion.h1>
 
-      {/* Bio with custom style - full width */}
+      {/* Bio with custom style - full width, responsive with max size on mobile */}
       {profile.bio && (
         <motion.p
-          className="w-full px-4"
+          className="w-full px-4 max-sm:text-sm"
           style={{
-            fontSize: `${bioStyle.fontSize}px`,
+            fontSize: `min(${bioStyle.fontSize}px, calc(12px + 1vw))`,
             color: bioStyle.color,
             fontFamily: bioStyle.fontFamily,
             fontWeight: getFontWeight(bioStyle.fontWeight || 'normal'),
