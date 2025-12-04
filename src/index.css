@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+/* Custom theme colors for Linktree Clone */
+:root {
+  --color-primary: #3B82F6;
+  --color-primary-hover: #2563EB;
+  --color-background: #ffffff;
+  --color-surface: #f3f4f6;
+  --color-text: #1f2937;
+  --color-text-secondary: #6b7280;
+}
+
+.dark {
+  --color-background: #111827;
+  --color-surface: #1f2937;
+  --color-text: #f9fafb;
+  --color-text-secondary: #9ca3af;
+}
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--color-text);
+  transition: color 0.3s ease;
+  min-height: 100vh;
+}
+
+html, body, #root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
