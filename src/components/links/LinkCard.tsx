@@ -2,16 +2,33 @@
 // Requirements: 1.6, 3.2, 11.2, 11.4
 
 import { motion } from 'framer-motion';
-import { ExternalLink, Link as LinkIcon, Instagram, Youtube, Twitter, Github, Linkedin, Facebook, Globe, Mail, Music, Video, ShoppingBag, BookOpen, Camera, MessageCircle } from 'lucide-react';
-import type { LinkItem } from '../types';
+import {
+  ExternalLink,
+  Link as LinkIcon,
+  Instagram,
+  Youtube,
+  Twitter,
+  Github,
+  Linkedin,
+  Facebook,
+  Globe,
+  Mail,
+  Music,
+  Video,
+  ShoppingBag,
+  BookOpen,
+  Camera,
+  MessageCircle,
+} from 'lucide-react';
+import type { LinkItem } from '../../types';
 
 /**
  * Renders the appropriate icon based on icon type and value
  */
 function renderPredefinedIcon(iconValue: string, primaryColor: string) {
-  const iconProps = { className: "w-5 h-5", color: primaryColor };
+  const iconProps = { className: 'w-5 h-5', color: primaryColor };
   const iconKey = iconValue.toLowerCase();
-  
+
   switch (iconKey) {
     case 'instagram': return <Instagram {...iconProps} />;
     case 'youtube': return <Youtube {...iconProps} />;
@@ -32,13 +49,6 @@ function renderPredefinedIcon(iconValue: string, primaryColor: string) {
   }
 }
 
-/**
- * LinkCard component - Displays a single link with icon and hover effects
- * Requirements: 1.6 - Display icon alongside link title
- * Requirements: 3.2 - Redirect to target URL in new tab
- * Requirements: 11.2 - Hover effects with shadows and scale
- * Requirements: 11.4 - Visual feedback through color transitions
- */
 export interface LinkCardProps {
   link: LinkItem;
   onClick?: () => void;
@@ -49,40 +59,31 @@ export interface LinkCardProps {
   buttonGradient?: string;
 }
 
-export function LinkCard({ 
-  link, 
-  onClick, 
-  isAnimated = true, 
-  index = 0, 
+/**
+ * LinkCard component - Displays a single link with icon and hover effects
+ */
+export function LinkCard({
+  link,
+  onClick,
+  isAnimated = true,
+  index = 0,
   primaryColor = '#3B82F6',
   buttonStyle = 'filled',
   buttonGradient,
 }: LinkCardProps) {
-
   const handleClick = () => {
     onClick?.();
     window.open(link.url, '_blank', 'noopener,noreferrer');
   };
 
-  // Determine button styles based on buttonStyle prop
   const getButtonStyles = () => {
     if (buttonStyle === 'gradient' && buttonGradient) {
-      return {
-        background: buttonGradient,
-        color: 'white',
-      };
+      return { background: buttonGradient, color: 'white' };
     }
     if (buttonStyle === 'filled') {
-      return {
-        backgroundColor: primaryColor,
-        color: 'white',
-      };
+      return { backgroundColor: primaryColor, color: 'white' };
     }
-    // outline style
-    return {
-      backgroundColor: 'rgba(255,255,255,0.9)',
-      borderColor: primaryColor,
-    };
+    return { backgroundColor: 'rgba(255,255,255,0.9)', borderColor: primaryColor };
   };
 
   const isFilledOrGradient = buttonStyle === 'filled' || buttonStyle === 'gradient';
@@ -90,10 +91,8 @@ export function LinkCard({
   const cardContent = (
     <button
       onClick={handleClick}
-      className={`w-full p-4 min-h-[56px] rounded-xl flex items-center gap-4 text-left transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
-        isFilledOrGradient 
-          ? 'border-transparent' 
-          : 'border-2'
+      className={`w-full p-4 min-h-[56px] cursor-pointer rounded-xl flex items-center gap-4 text-left transition-all duration-200 hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] focus:outline-none focus:ring-2 focus:ring-offset-2 ${
+        isFilledOrGradient ? 'border-transparent' : 'border-2'
       }`}
       style={getButtonStyles()}
     >
@@ -143,11 +142,7 @@ export function LinkCard({
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{
-        duration: 0.4,
-        delay: index * 0.1,
-        ease: 'easeOut',
-      }}
+      transition={{ duration: 0.4, delay: index * 0.1, ease: 'easeOut' }}
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
     >
@@ -155,5 +150,3 @@ export function LinkCard({
     </motion.div>
   );
 }
-
-export default LinkCard;

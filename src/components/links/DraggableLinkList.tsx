@@ -27,7 +27,7 @@ import {
   Link as LinkIcon,
   MoreVertical,
 } from 'lucide-react';
-import type { LinkItem } from '../types';
+import type { LinkItem } from '../../types';
 
 export interface DraggableLinkListProps {
   links: LinkItem[];
@@ -38,14 +38,12 @@ export interface DraggableLinkListProps {
   primaryColor?: string;
 }
 
-// Lucide icon props type
 type LucideIconProps = {
   className?: string;
   color?: string;
   size?: number | string;
 };
 
-// Map of predefined icon names to Lucide components
 const ICON_MAP: Record<string, React.ComponentType<LucideIconProps>> = {
   instagram: Instagram,
   youtube: Youtube,
@@ -73,9 +71,6 @@ interface DraggableLinkItemProps {
   primaryColor: string;
 }
 
-/**
- * Individual draggable link item
- */
 function DraggableLinkItem({
   link,
   onEdit,
@@ -88,7 +83,6 @@ function DraggableLinkItem({
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
-  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -109,7 +103,6 @@ function DraggableLinkItem({
       onDelete(link.id);
     } else {
       setIsDeleting(true);
-      // Reset after 3 seconds if not confirmed
       setTimeout(() => setIsDeleting(false), 3000);
     }
   };
@@ -126,16 +119,14 @@ function DraggableLinkItem({
       }`}
     >
       <div className="flex items-center gap-3">
-        {/* Drag Handle */}
         <button
           onPointerDown={(e) => dragControls.start(e)}
-          className="p-1 cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 cursor-pointer"
+          className="p-1 cursor-grab active:cursor-grabbing touch-none text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
           aria-label="Drag to reorder"
         >
           <GripVertical className="w-5 h-5" />
         </button>
 
-        {/* Icon */}
         <div
           className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 ${
             link.isEnabled ? '' : 'grayscale'
@@ -148,7 +139,6 @@ function DraggableLinkItem({
               alt=""
               className="w-6 h-6 object-contain"
               onError={(e) => {
-                // Show fallback icon on error
                 const parent = e.currentTarget.parentElement;
                 e.currentTarget.style.display = 'none';
                 if (parent) {
@@ -160,107 +150,74 @@ function DraggableLinkItem({
               }}
             />
           ) : IconComponent ? (
-            <IconComponent
-              className="w-5 h-5"
-              color={link.isEnabled ? primaryColor : '#9CA3AF'}
-            />
+            <IconComponent className="w-5 h-5" color={link.isEnabled ? primaryColor : '#9CA3AF'} />
           ) : (
-            <ExternalLink
-              className="w-5 h-5"
-              color={link.isEnabled ? primaryColor : '#9CA3AF'}
-            />
+            <ExternalLink className="w-5 h-5" color={link.isEnabled ? primaryColor : '#9CA3AF'} />
           )}
         </div>
 
-        {/* Link Info */}
         <div className="flex-1 min-w-0">
-          <h4
-            className={`font-medium truncate ${
-              link.isEnabled
-                ? 'text-gray-900 dark:text-white'
-                : 'text-gray-500 dark:text-gray-400'
-            }`}
-          >
+          <h4 className={`font-medium truncate ${link.isEnabled ? 'text-gray-900 dark:text-white' : 'text-gray-500 dark:text-gray-400'}`}>
             {link.title}
           </h4>
-          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">
-            {link.url}
-          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400 truncate">{link.url}</p>
         </div>
 
-        {/* Click Count Badge */}
         {link.clickCount > 0 && (
-          <span
-            className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
-            title={`${link.clickCount} clicks`}
-          >
+          <span className="text-xs px-2 py-1 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300" title={`${link.clickCount} clicks`}>
             {link.clickCount} clicks
           </span>
         )}
 
-        {/* Action Buttons - Desktop (hidden on mobile) */}
+        {/* Desktop Actions */}
         <div className="hidden sm:flex items-center gap-1">
-          {/* Toggle Visibility */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onToggle(link.id, !link.isEnabled)}
             className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
               link.isEnabled
-                ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20 active:bg-green-100 dark:active:bg-green-900/30'
-                : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600'
+                ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
+                : 'text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
             }`}
             title={link.isEnabled ? 'Hide link' : 'Show link'}
-            aria-label={link.isEnabled ? 'Hide link' : 'Show link'}
           >
-            {link.isEnabled ? (
-              <Eye className="w-5 h-5" />
-            ) : (
-              <EyeOff className="w-5 h-5" />
-            )}
+            {link.isEnabled ? <Eye className="w-5 h-5" /> : <EyeOff className="w-5 h-5" />}
           </motion.button>
 
-          {/* Edit */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={() => onEdit(link)}
-            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 active:bg-blue-100 dark:active:bg-blue-900/30 transition-colors cursor-pointer"
+            className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
             title="Edit link"
-            aria-label="Edit link"
           >
             <Edit2 className="w-5 h-5" />
           </motion.button>
 
-          {/* Delete */}
           <motion.button
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
             onClick={handleDelete}
             className={`p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg transition-colors cursor-pointer ${
-              isDeleting
-                ? 'bg-red-500 text-white'
-                : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 active:bg-red-100 dark:active:bg-red-900/30'
+              isDeleting ? 'bg-red-500 text-white' : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
             }`}
             title={isDeleting ? 'Click again to confirm' : 'Delete link'}
-            aria-label={isDeleting ? 'Confirm delete' : 'Delete link'}
           >
             <Trash2 className="w-5 h-5" />
           </motion.button>
         </div>
 
-        {/* Mobile Menu - 3 dots (visible only on mobile) */}
+        {/* Mobile Menu */}
         <div className="relative sm:hidden" ref={menuRef}>
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => setShowMobileMenu(!showMobileMenu)}
             className="p-2.5 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors cursor-pointer"
-            aria-label="More actions"
           >
             <MoreVertical className="w-5 h-5" />
           </motion.button>
 
-          {/* Dropdown Menu */}
           <AnimatePresence>
             {showMobileMenu && (
               <motion.div
@@ -270,57 +227,29 @@ function DraggableLinkItem({
                 transition={{ duration: 0.15 }}
                 className="absolute right-0 top-full mt-1 z-50 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-1 min-w-[160px]"
               >
-                {/* Toggle Visibility */}
                 <button
-                  onClick={() => {
-                    onToggle(link.id, !link.isEnabled);
-                    setShowMobileMenu(false);
-                  }}
+                  onClick={() => { onToggle(link.id, !link.isEnabled); setShowMobileMenu(false); }}
                   className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors cursor-pointer ${
-                    link.isEnabled
-                      ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20'
-                      : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    link.isEnabled ? 'text-green-600 hover:bg-green-50 dark:hover:bg-green-900/20' : 'text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-700'
                   }`}
                 >
-                  {link.isEnabled ? (
-                    <>
-                      <EyeOff className="w-4 h-4" />
-                      <span>Sembunyikan</span>
-                    </>
-                  ) : (
-                    <>
-                      <Eye className="w-4 h-4" />
-                      <span>Tampilkan</span>
-                    </>
-                  )}
+                  {link.isEnabled ? <><EyeOff className="w-4 h-4" /><span>Sembunyikan</span></> : <><Eye className="w-4 h-4" /><span>Tampilkan</span></>}
                 </button>
 
-                {/* Edit */}
                 <button
-                  onClick={() => {
-                    onEdit(link);
-                    setShowMobileMenu(false);
-                  }}
+                  onClick={() => { onEdit(link); setShowMobileMenu(false); }}
                   className="w-full px-4 py-3 flex items-center gap-3 text-left text-blue-600 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
                 >
-                  <Edit2 className="w-4 h-4" />
-                  <span>Edit</span>
+                  <Edit2 className="w-4 h-4" /><span>Edit</span>
                 </button>
 
-                {/* Delete */}
                 <button
-                  onClick={() => {
-                    handleDelete();
-                    if (!isDeleting) setShowMobileMenu(false);
-                  }}
+                  onClick={() => { handleDelete(); if (!isDeleting) setShowMobileMenu(false); }}
                   className={`w-full px-4 py-3 flex items-center gap-3 text-left transition-colors cursor-pointer ${
-                    isDeleting
-                      ? 'bg-red-500 text-white'
-                      : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
+                    isDeleting ? 'bg-red-500 text-white' : 'text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20'
                   }`}
                 >
-                  <Trash2 className="w-4 h-4" />
-                  <span>{isDeleting ? 'Klik lagi untuk hapus' : 'Hapus'}</span>
+                  <Trash2 className="w-4 h-4" /><span>{isDeleting ? 'Klik lagi untuk hapus' : 'Hapus'}</span>
                 </button>
               </motion.div>
             )}
@@ -328,7 +257,6 @@ function DraggableLinkItem({
         </div>
       </div>
 
-      {/* Disabled Indicator */}
       {!link.isEnabled && (
         <div className="mt-2 text-xs text-gray-500 dark:text-gray-400 flex items-center gap-1">
           <EyeOff className="w-3 h-3" />
@@ -339,12 +267,6 @@ function DraggableLinkItem({
   );
 }
 
-/**
- * DraggableLinkList component - List of links with drag-and-drop reordering
- * Requirements: 1.4 - Drag-and-drop reordering
- * Requirements: 1.7 - Toggle link visibility
- * Requirements: 1.8 - Display both enabled and disabled links with visual distinction
- */
 export function DraggableLinkList({
   links,
   onReorder,
@@ -363,12 +285,7 @@ export function DraggableLinkList({
   }
 
   return (
-    <Reorder.Group
-      axis="y"
-      values={links}
-      onReorder={onReorder}
-      className="space-y-3"
-    >
+    <Reorder.Group axis="y" values={links} onReorder={onReorder} className="space-y-3">
       {links.map((link) => (
         <DraggableLinkItem
           key={link.id}
@@ -382,5 +299,3 @@ export function DraggableLinkList({
     </Reorder.Group>
   );
 }
-
-export default DraggableLinkList;

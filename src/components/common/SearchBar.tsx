@@ -28,7 +28,7 @@ export function SearchBar({
 
   return (
     <motion.div
-      className="relative w-full  mb-6"
+      className="relative w-full mb-6"
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
@@ -65,7 +65,7 @@ export function SearchBar({
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.15 }}
             onClick={handleClear}
-            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 transition-colors"
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 active:bg-gray-200 dark:active:bg-gray-600 transition-colors cursor-pointer"
             aria-label="Clear search"
           >
             <X className="w-5 h-5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300" />
@@ -75,5 +75,3 @@ export function SearchBar({
     </motion.div>
   );
 }
-
-export default SearchBar;

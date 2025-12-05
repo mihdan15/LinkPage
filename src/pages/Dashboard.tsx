@@ -262,7 +262,7 @@ export function Dashboard() {
             <div className="flex items-center gap-4">
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors"
+                className="flex cursor-pointer items-center gap-2 px-3 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-red-500 transition-colors"
               >
                 <LogOut className="w-4 h-4" />
                 Logout
@@ -281,12 +281,12 @@ export function Dashboard() {
 
         {/* Tab Navigation */}
         <div className="mb-6">
-          <nav className="flex space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
+          <nav className="flex  space-x-1 bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
             {TABS.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm transition-all ${
+                className={`flex-1 cursor-pointer flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium text-sm transition-all ${
                   activeTab === tab.id
                     ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-sm'
                     : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white'
@@ -309,12 +309,12 @@ export function Dashboard() {
             transition={{ duration: 0.2 }}
           >
             {activeTab === 'links' && (
-              <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
+              <div className=" bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6">
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Your Links</h2>
                   <motion.button
                     onClick={handleAddLink}
-                    className="flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all hover:opacity-90"
+                    className="flex cursor-pointer items-center gap-2 px-4 py-2 rounded-lg font-medium text-white transition-all hover:opacity-90"
                     style={{ backgroundColor: primaryColor }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}

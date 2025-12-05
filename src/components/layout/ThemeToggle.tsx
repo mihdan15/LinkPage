@@ -19,7 +19,7 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
   return (
     <motion.button
       onClick={onToggle}
-      className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+      className="p-2 rounded-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors cursor-pointer"
       whileHover={{ scale: 1.05 }}
       whileTap={{ scale: 0.95 }}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
@@ -39,5 +39,3 @@ export function ThemeToggle({ isDark, onToggle }: ThemeToggleProps) {
     </motion.button>
   );
 }
-
-export default ThemeToggle;

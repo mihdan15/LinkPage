@@ -66,7 +66,7 @@ export function Login() {
             </div>
             <button
               type="submit"
-              className="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
+              className="w-full cursor-pointer py-3 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors"
             >
               Login
             </button>
